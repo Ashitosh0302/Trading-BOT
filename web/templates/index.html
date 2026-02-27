@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance Futures · Testnet Terminal</title>
+    <!-- Google Font & smooth icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b0f1c 0%, #141b2b 100%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            margin: 0;
+            color: #e9edf5;
+        }
+
+        .card {
+            background: rgba(18, 25, 40, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(71, 125, 241, 0.15);
+            border-radius: 2.5rem;
+            box-shadow: 0 30px 60px -10px rgba(0, 20, 60, 0.8), 0 0 0 1px rgba(56, 128, 255, 0.2) inset;
+            width: 100%;
+            max-width: 700px;
+            padding: 2.5rem 2.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .badge-icon {
+            background: #1e2b45;
+            border-radius: 60px;
+            padding: 0.5rem 1rem 0.5rem 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid #2e3f60;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            color: #b0c8ff;
+        }
+
+        .badge-icon i {
+            color: #fcd34d;
+            font-size: 0.9rem;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            background: rgba(0, 230, 150, 0.08);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid rgba(72, 255, 180, 0.2);
+        }
+
+        .pulse {
+            width: 10px;
+            height: 10px;
+            background: #00e68a;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ffaa;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); background: #4affb5; }
+            100% { opacity: 0.6; transform: scale(1); }
+        }
+
+        h2 {
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+            margin: 0.5rem 0 0.2rem 0;
+            background: linear-gradient(135deg, #ffffff 0%, #bdd3ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sub {
+            color: #8096c5;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px dashed #25344f;
+            padding-bottom: 1.2rem;
+        }
+
+        .sub i {
+            color: #3875e0;
+        }
+
+        /* form grid */
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+        }
+
+        .input-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-row label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #9db3d9;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-row label i {
+            width: 1.2rem;
+            color: #3c6edb;
+        }
+
+        .field-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .field-wrapper input, .field-wrapper select {
+            width: 100%;
+            background: #0f172f;
+            border: 1.5px solid #25344f;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            font-size: 1rem;
+            font-family: 'Inter', monospace;
+            color: #f0f4ff;
+            transition: all 0.2s ease;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .field-wrapper select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23809ac7" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 1.2rem center;
+            background-size: 1.2rem;
+        }
+
+        .field-wrapper input:focus, .field-wrapper select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+            background: #13203a;
+        }
+
+        .field-wrapper input::placeholder {
+            color: #3f5077;
+            font-weight: 400;
+            font-size: 0.95rem;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: #6379a8;
+            margin-left: 2rem;
+            margin-top: 0.2rem;
+        }
+
+        .double-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        /* action button */
+        .action-button {
+            margin-top: 1rem;
+            background: linear-gradient(95deg, #1d4ed8, #2563eb, #3b82f6);
+            border: none;
+            border-radius: 2rem;
+            padding: 1.2rem 1.8rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 15px 25px -8px rgba(20, 80, 220, 0.5);
+            letter-spacing: 0.3px;
+        }
+
+        .action-button i {
+            font-size: 1.3rem;
+            transition: transform 0.2s;
+        }
+
+        .action-button:hover {
+            background: linear-gradient(95deg, #2563eb, #3b82f6, #6093fa);
+            transform: scale(1.02);
+            box-shadow: 0 20px 30px -5px #1e3a8a;
+        }
+
+        .action-button:hover i {
+            transform: translateX(4px);
+        }
+
+        /* result / error panels */
+        .result-panel, .error-panel {
+            margin-top: 2.5rem;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            background: #0d1428;
+            border: 1px solid;
+            animation: fadeSlide 0.3s ease;
+        }
+
+        .result-panel {
+            border-color: #2b4b8f;
+            box-shadow: 0 8px 0 #0f2645;
+        }
+
+        .error-panel {
+            border-color: #a13e4b;
+            box-shadow: 0 8px 0 #461c22;
+        }
+
+        .panel-header {
+            padding: 1rem 1.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid;
+        }
+
+        .result-panel .panel-header {
+            background: #132642;
+            color: #a9d0ff;
+            border-color: #2a4980;
+        }
+
+        .error-panel .panel-header {
+            background: #2e1b28;
+            color: #ffa7b5;
+            border-color: #872b38;
+        }
+
+        .pre-content {
+            padding: 1.4rem 1.8rem;
+            font-family: 'SF Mono', 'Fira Code', 'Inter', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #cbd5ff;
+            background: #0a1020;
+        }
+
+        .error-panel .pre-content {
+            color: #ffc0cb;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* small misc */
+        .price-hint {
+            background: #18223b;
+            border-radius: 100px;
+            padding: 0.15rem 0.9rem;
+            font-size: 0.75rem;
+            color: #6f90d4;
+            display: inline-block;
+            margin-left: 0.7rem;
+        }
+
+        hr {
+            border: 0.5px solid #1f2b41;
+            margin: 1rem 0;
+        }
+
+        footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+            color: #445a84;
+            font-size: 0.7rem;
+        }
+
+        /* responsiveness */
+        @media (max-width: 500px) {
+            .card { padding: 1.8rem; }
+            .double-row { grid-template-columns: 1fr; }
+            .badge-icon span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- top bar with live indicator -->
+        <div class="terminal-badge">
+            <div class="badge-icon">
+                <i class="fas fa-terminal"></i>
+                <span>testnet.binance.futures</span>
+                <i class="fas fa-circle" style="font-size: 0.4rem; color: #2ecc71; margin-left: 0.2rem;"></i>
+            </div>
+            <div class="live-indicator">
+                <span class="pulse"></span>
+                <span style="font-weight: 500;">REST live</span>
+            </div>
+        </div>
+
+        <h2>Futures order</h2>
+        <div class="sub">
+            <i class="fas fa-seedling"></i>  testnet trading · isolated margin simulation
+        </div>
+
+        <!-- main form (POST to same endpoint) -->
+        <form method="POST">
+            <div class="form-grid">
+                <!-- symbol row -->
+                <div class="input-row">
+                    <label><i class="fas fa-chart-line"></i> Symbol</label>
+                    <div class="field-wrapper">
+                        <input type="text" name="symbol" value="BTCUSDT" required placeholder="e.g. BTCUSDT, ETHUSDT">
+                    </div>
+                </div>
+
+                <!-- side & type double -->
+                <div class="double-row">
+                    <div class="input-row">
+                        <label><i class="fas fa-arrows-left-right"></i> Side</label>
+                        <div class="field-wrapper">
+                            <select name="side">
+                                <option value="BUY">BUY ▸ long</option>
+                                <option value="SELL">SELL ▸ short</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <label><i class="fas fa-tag"></i> Order type</label>
+                        <div class="field-wrapper">
+                            <select name="type">
+                                <option value="MARKET">MARKET ⚡</option>
+                                <option value="LIMIT">LIMIT 📊</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- quantity row (full width) -->
+                <div class="input-row">
+                    <label><i class="fas fa-cubes"></i> Quantity</label>
+                    <div class="field-wrapper">
+                        <input type="number" step="any" name="quantity" required placeholder="0.001 BTC ...">
+                    </div>
+                    <div class="hint">base asset quantity (e.g. BTC)</div>
+                </div>
+
+                <!-- price row (limit only hint) -->
+                <div class="input-row">
+                    <label><i class="fas fa-dollar-sign"></i> Price <span class="price-hint">only for LIMIT</span></label>
+                    <div class="field-wrapper">
+                        <input type="number" step="any" name="price" placeholder="e.g. 42000.50">
+                    </div>
+                </div>
+
+                <!-- submit button -->
+                <button type="submit" class="action-button">
+                            <i class="fas fa-paper-plane"></i> Place order
+                            <i class="fas fa-arrow-right" style="font-size: 1rem; opacity: 0.9;"></i>
+                </button>
+            </div>
+        </form>
+
+        <!-- dynamic result / error block (jinja2) -->
+        {% if result %}
+        <div class="result-panel">
+            <div class="panel-header">
+                <i class="fas fa-check-circle" style="color: #3fe87e;"></i> ORDER EXECUTED (testnet)
+                <i class="fas fa-clone" style="margin-left: auto; opacity: 0.6;"></i>
+            </div>
+            <div class="pre-content">{{ result }}</div>
+        </div>
+        {% elif error %}
+        <div class="error-panel">
+            <div class="panel-header">
+                <i class="fas fa-exclamation-triangle" style="color: #fc7b8b;"></i> ORDER REJECTED
+                <i class="fas fa-bug" style="margin-left: auto;"></i>
+            </div>
+            <div class="pre-content">{{ error }}</div>
+        </div>
+        {% else %}
+        <!-- subtle placeholder when no response yet -->
+        <div style="margin-top: 2rem; background: rgba(30,50,90,0.3); border-radius: 2rem; padding: 1rem 2rem; text-align: center; border: 1px dashed #2f4168; color: #5f7bb5; font-size: 0.9rem;">
+            <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i> 
+            ready to send testnet order · all fields validated on client
+        </div>
+        {% endif %}
+
+        <footer>
+            <i class="fas fa-shield-alt" style="margin-right: 0.3rem;"></i> binance futures testnet · localhost
+        </footer>
+    </div>
+
+    <!-- small script to keep price field context (optional UX) -->
+    <script>
+        (function() {
+            // price field optional enhancement: disable if MARKET, but not strictly necessary
+            const typeSelect = document.querySelector('select[name="type"]');
+            const priceInput = document.querySelector('input[name="price"]');
+            if (typeSelect && priceInput) {
+                const togglePrice = () => {
+                    if (typeSelect.value === 'MARKET') {
+                        priceInput.disabled = true;
+                        priceInput.placeholder = '❌ not used for MARKET';
+                        priceInput.style.opacity = '0.6';
+                    } else {
+                        priceInput.disabled = false;
+                        priceInput.placeholder = 'e.g. 42000.50';
+                        priceInput.style.opacity = '1';
+                    }
+                };
+                typeSelect.addEventListener('change', togglePrice);
+                togglePrice(); // set initial state
+            }
+        })();
+    </script>
+</body>
+</html>
