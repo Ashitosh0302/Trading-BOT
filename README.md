@@ -28,23 +28,28 @@ This project was developed as part of a **Python Developer assignment**.
 ---
 
 ## Project Structure
+```bash
 Trading-BOT/
 │
 ├── bot/
-│   ├── __init__.py
-│   ├── client.py
-│   ├── orders.py
-│   ├── validators.py
-│   └── logging_config.py
+│   ├── __init__.py                 # Package initializer
+│   ├── client.py                    # Binance client setup
+│   ├── orders.py                     # Order placement logic
+│   ├── validators.py                  # Input validation
+│   └── logging_config.py               # Logging configuration
 │
 ├── web/
-│   └── app.py
+│   └── app.py                         # Flask web application
 │
-├── logs/
-├── requirements.txt
-└── README.md
+├── logs/                               # Log files directory
+│   ├── market_order.log
+│   └── limit_order.log
+│
+├── .env                                # Environment variables (API keys)
+├── requirements.txt                    # Project dependencies
+└── README.md                           # Project documentation
+```
 
----
 ## Example Usage
 
 ### Market Order
